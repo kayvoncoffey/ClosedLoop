@@ -25,25 +25,34 @@ simulator = template_simulator(model,time_scale=timescale)
 estimator = do_mpc.estimator.StateFeedback(model)
 
 # Set Initial State
-BG = 215 # mg/dl
-BG_tau = 200 # mg/dl 5 minutes ago
+BG = 100 # mg/dl
+BG_tau = 150 # mg/dl 5 minutes ago
 IOB = 0.2 # mU/ml
 IOB_tau = 0.3 # mU/ml 15 minute ago
 
 
 Gs = [BG *100]+[BG_tau *100]*(n_G_delays)
-Is = [IOB *50]+[IOB_tau *50]*(n_I_delays)
-Ids = [0 *50]*(n_Idose_delays)
+Is = [IOB *100]+[IOB_tau *100]*(n_I_delays)
+Ids = [0 *100]*(n_Idose_delays)
 Gds = [0 *100]*(n_Gdose_delays)
 x0 = np.array(Gs+Is+Ids+Gds).reshape(-1,1)
 
 mpc.x0 = x0 #mpc.set_initial_state(x0, reset_history=True)
 simulator.x0 = x0 #simulator.set_initial_state(x0, reset_history=True)
+mpc.set_initial_guess()
 
+sys.stdout = open(os.devnull, "w")
 u0 = mpc.make_step(x0)
 y_next = simulator.make_step(u0)
 x0 = estimator.make_step(y_next)
+sys.stdout = sys.__stdout__
 
-print(u0)
-print(y_next)
-print(x0)
+print('==================================================================== \n')
+print('Glucose 5 minutes ago: '+str(BG_tau)+' mg/dl')
+print('Glucose current: '+str(BG)+' mg/dl')
+print('Insulin on board 15 minutes ago: '+str(IOB_tau)+' mU/ml')
+print('Insulin on board currently: '+str(IOB)+' mU/ml')
+print('-------------------------------------------------------------')
+print('Controller Glucose infusion rate: '+str(u0[0]/100)+' mg/dl per min')
+print('Controller Insulin infusion rate: '+str(u0[1]/100)+' mU/ml per min \n')
+print('==================================================================== \n')

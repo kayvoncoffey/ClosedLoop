@@ -12,7 +12,7 @@ import os
 
 # Set Project Parameters and Initialize
 timescale = 5
-HOURS = 5
+HOURS = 6
 N_iterations = int(floor(HOURS*60/timescale))
 
 n_G_delays = int(floor(5/timescale))
@@ -27,10 +27,12 @@ estimator = do_mpc.estimator.StateFeedback(model)
 
 
 # Set Initial State
-Gs = [200 *100]*(n_G_delays+1)
-Is = [0 *50]*(n_I_delays+1)
-Ids = [0 *50]*(n_Idose_delays)
-Gds = [0 *100]*(n_Gdose_delays)
+g = 100 #NEED TO CHANGE THESE IN controller.py TOO
+i = 100 #NEED TO CHANGE THESE IN controller.py TOO
+Gs = [200 *g]*(n_G_delays+1)
+Is = [0 *i]*(n_I_delays+1)
+Ids = [0 *i]*(n_Idose_delays)
+Gds = [0 *g]*(n_Gdose_delays)
 x0 = np.array(Gs+Is+Ids+Gds).reshape(-1,1)
 
 mpc.x0 = x0 #mpc.set_initial_state(x0, reset_history=True)
@@ -44,12 +46,12 @@ b=45
 meal = [0]*a+[i*3 for i in range(b-a)]+[0]*int(floor(N_iterations-b))
 import contextlib
 for k in range(N_iterations):
-	# sys.stdout = open(os.devnull, "w")
+	sys.stdout = open(os.devnull, "w")
 	u0 = mpc.make_step(x0)
-	if (k>=a) & (k<=b): u0[0] = (k-a)*3 *100
+	if (k>=a) & (k<=b): u0[0] += (k-a)*3 *g
 	y_next = simulator.make_step(u0)
 	x0 = estimator.make_step(y_next)
-	# sys.stdout = sys.__stdout__
+	sys.stdout = sys.__stdout__
 
 # Graphics
 mpc_graphics = do_mpc.graphics.Graphics(mpc.data)
@@ -63,8 +65,8 @@ mpc_graphics.add_line(var_type='_x', var_name='I_t', axis=ax[1])
 mpc_graphics.add_line(var_type='_u', var_name='G_u', axis=ax[2])
 mpc_graphics.add_line(var_type='_u', var_name='I_u', axis=ax[3])
 
-ax[0].axhline(80 *100,color='black',linestyle='--',linewidth=0.75)
-ax[0].axhline(120 *100,color='black',linestyle='--',linewidth=0.75)
+ax[0].axhline(80 *g,color='black',linestyle='--',linewidth=0.75)
+ax[0].axhline(120 *g,color='black',linestyle='--',linewidth=0.75)
 ax[0].set(title='Blood Glucose',ylabel='BG [mg/dl]')
 ax[1].set(title='Insulin on Board',ylabel='IOB [mU/ml]')
 ax[2].set(title='Controller Glucose Infusion',ylabel='G Infusion [mg/dl min]')
@@ -87,7 +89,7 @@ n_steps = mpc.data['_time'].shape[0]
 anim = FuncAnimation(fig, update, frames=n_steps, blit=True)
 
 gif_writer = ImageMagickWriter(fps=5)
-anim.save('/Users/kcoffey/Documents/ClosedLoop/output/correct_unobsmeal.gif')#, writer=gif_writer)
+anim.save('/Users/kcoffey/Documents/ClosedLoop/output/hyperglycemia_unobsmeal_dualhormone.gif')#, writer=gif_writer)
 
 
 
