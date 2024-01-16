@@ -16,8 +16,8 @@ def template_mpc(model,time_scale):
 	# Set parameters:
 
 	setup_mpc = {
-		'n_robust': 0,
-		'n_horizon': 50,
+		'n_robust': 1,
+		'n_horizon': int(floor(50/time_scale)),
 		't_step': time_step,
 		'state_discretization': 'discrete',
 		'store_full_solution':True,
@@ -53,6 +53,8 @@ def template_mpc(model,time_scale):
 	# # upper bounds of the inputs
 	mpc.bounds['upper', '_u', 'G_u'] = 0 *100
 	mpc.bounds['upper', '_u', 'I_u'] = 10 *50
+
+	mpc.set_uncertainty_values(gamma = np.array([0.2,0.5,0.7]))
 
 	mpc.setup()
 

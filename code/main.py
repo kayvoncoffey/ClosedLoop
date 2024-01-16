@@ -12,7 +12,7 @@ import os
 
 # Set Project Parameters and Initialize
 timescale = 1
-HOURS = 3
+HOURS = 1
 N_iterations = int(floor(HOURS*60/timescale))
 
 n_G_delays = int(floor(5/timescale))
@@ -25,43 +25,28 @@ mpc = template_mpc(model,time_scale=timescale)
 simulator = template_simulator(model,time_scale=timescale)
 estimator = do_mpc.estimator.StateFeedback(model)
 
+
 # Set Initial State
 Gs = [200 *100]*(n_G_delays+1)
-Is = [0.001 *50]*(n_I_delays+1)
+Is = [0 *50]*(n_I_delays+1)
 Ids = [0 *50]*(n_Idose_delays)
 Gds = [0 *100]*(n_Gdose_delays)
 x0 = np.array(Gs+Is+Ids+Gds).reshape(-1,1)
 
 mpc.x0 = x0 #mpc.set_initial_state(x0, reset_history=True)
 simulator.x0 = x0 #simulator.set_initial_state(x0, reset_history=True)
-
-# Setup Visualization
-# graphics = do_mpc.graphics.Graphics(mpc.data)
-
-# fig, ax = plt.subplots(5, sharex=True)
-# graphics.add_line(var_type='_x', var_name='G_t', axis=ax[0])
-# graphics.add_line(var_type='_x', var_name='I_t', axis=ax[1])
-# graphics.add_line(var_type='_u', var_name='G_u', axis=ax[2])
-# graphics.add_line(var_type='_x', var_name='G_load', axis=ax[2]) #+str(n_Gdose_delays-1)
-# graphics.add_line(var_type='_u', var_name='I_u', axis=ax[3])
-# graphics.add_line(var_type='_x', var_name='I_load', axis=ax[3]) #+str(n_Idose_delays-1)
-# # Fully customizable:
-# ax[0].set(ylabel='BG [mg/dl]',ylim=[0,200])
-# ax[1].set(ylabel='I [mU/ml]')
-# ax[2].set(ylabel='G [mg/dl per min]')
-# ax[3].set(ylabel='CSII [mU/ml per min]')
-
+estimator.x0 = x0
+mpc.set_initial_guess()
 
 # Main Loop
 import contextlib
 for k in range(N_iterations):
 	# sys.stdout = open(os.devnull, "w")
 	u0 = mpc.make_step(x0)
-	if k==75: u0[0] = 100 *100
+	if (k>=70) & (k<=80): u0[0] = (k-70)*1 *100
 	y_next = simulator.make_step(u0)
 	x0 = estimator.make_step(y_next)
 	# sys.stdout = sys.__stdout__
-
 
 x_obs = mpc.data['_x']
 u_obs = mpc.data['_u']
@@ -77,15 +62,13 @@ ax[3].plot(u_obs[:,1]/50,label='I in')
 ax[3].plot(x_obs[:,n_G_delays+1+n_I_delays+n_Idose_delays]/50,label='I act')
 
 ax[0].set(title='Glucose Profile',ylabel='mg/dl',ylim=[0,250])
-ax[1].set(title='Insulin Profile',ylabel='mU/ml')
+ax[1].set(title='Insulin Profile',ylabel='mU/ml',ylim=[0,np.max(x_obs[:,n_G_delays+1]/50)])
 ax[2].set(title='Glucose Infusion Profile',ylabel='mg/dl per min')
 ax[3].set(title='Insulin Infusion Profile',ylabel='mU/ml per min')
 [ax[i].legend(loc='best') for i in range(4)]
 
 plt.tight_layout()
 plt.show()
-
-# graphics.plot_results(mpc.data)
 
 
 
