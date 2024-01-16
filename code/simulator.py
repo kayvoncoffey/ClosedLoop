@@ -1,4 +1,5 @@
 import do_mpc
+import numpy as np
 
 # Setup the system simulator
 def template_simulator(model,time_scale):
@@ -10,7 +11,12 @@ def template_simulator(model,time_scale):
 	# Set parameter(s):
 	simulator.set_param(t_step = time_step)
 
-	# Optional: Set function for parameters and time-varying parameters.
+	# Uncertain parameters
+	p_num = simulator.get_p_template()
+	p_num['gamma'] = np.random.uniform(0.2,0.7)
+	def p_fun(t_now):
+	    return p_num
+	simulator.set_p_fun(p_fun)
 
 	# Setup simulator:
 	simulator.setup()

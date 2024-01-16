@@ -49,7 +49,9 @@ def template_model(time_scale,nG,nI,nGd,nId):
 	# time_scale = tscale
 	time_step_use = 1*60*time_scale
 
-	GAMMA = 1
+	# Uncertain parameters:
+	GAMMA = model.set_variable('_p', 'gamma')
+	# GAMMA = 0.5
 	BETA = 0
 	Km = 2300
 	m = 0 /time_scale # scaled by 1/5 to convert to 5 minute time increments
@@ -75,6 +77,8 @@ def template_model(time_scale,nG,nI,nGd,nId):
 	# Inputs struct (operated variables): glucose infusion (meals or dual hormone), insulin infusion (CSII)
 	G_u = model.set_variable(var_type='_u', var_name='G_u', shape=(1,1))
 	I_u = model.set_variable(var_type='_u', var_name='I_u', shape=(1,1))
+
+
 
 	# Set RHS
 	# G_record = model.set_expression(expr_name='T_dif', expr=G_u)
