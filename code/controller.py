@@ -17,7 +17,7 @@ def template_mpc(model,time_scale):
 
 	setup_mpc = {
 		'n_robust': 1,
-		'n_horizon': int(floor(50/time_scale)),
+		'n_horizon': int(floor(70/time_scale)),
 		't_step': time_step,
 		'state_discretization': 'discrete',
 		'store_full_solution':True,
@@ -30,7 +30,7 @@ def template_mpc(model,time_scale):
 	_x = model.x
 	_u = model.u
 	mterm = (_x['G_t'] - 100 *100)**2 # terminal cost
-	lterm = (_x['G_t'] <= 60 *100)*10000 + (_u['G_u'])**2
+	lterm = (_x['G_t'] <= 60 *100)*10000 + (_u['G_u'])**2 + (_u['I_u'])**2
 	# lterm = (1/(_x['G_t'] - 10 *100)) # stage cost
 
 	mpc.set_objective(mterm=mterm, lterm=lterm)
@@ -52,7 +52,7 @@ def template_mpc(model,time_scale):
 	mpc.bounds['lower', '_u', 'I_u'] = 0
 
 	# # upper bounds of the inputs
-	mpc.bounds['upper', '_u', 'G_u'] = 10 *100
+	mpc.bounds['upper', '_u', 'G_u'] = 0 *100
 	mpc.bounds['upper', '_u', 'I_u'] = 10 *100
 
 	mpc.set_uncertainty_values(gamma = np.array([0.2,0.5,0.7]))

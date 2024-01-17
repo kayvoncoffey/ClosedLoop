@@ -59,7 +59,7 @@ mpc_graphics = do_mpc.graphics.Graphics(mpc.data)
 # %%capture
 fig, ax = plt.subplots(4, sharex=True, figsize=(16,12))
 plt.ion()
-plt.suptitle('Correction of Hyperglycemia with Unobserved Meal')
+plt.suptitle('Correction of Hyperglycemia with Unobserved Meal \n '+str(HOURS)+' hour simulation')
 mpc_graphics.add_line(var_type='_x', var_name='G_t', axis=ax[0])
 mpc_graphics.add_line(var_type='_x', var_name='I_t', axis=ax[1])
 mpc_graphics.add_line(var_type='_u', var_name='G_u', axis=ax[2])
@@ -70,7 +70,7 @@ ax[0].axhline(120 *g,color='black',linestyle='--',linewidth=0.75)
 ax[0].set(title='Blood Glucose',ylabel='BG [mg/dl]')
 ax[1].set(title='Insulin on Board',ylabel='IOB [mU/ml]')
 ax[2].set(title='Controller Glucose Infusion',ylabel='G Infusion [mg/dl min]')
-ax[3].set(title='Controller Insulin Infusion',ylabel='I Infusion [mU/ml min]',xlabel='minutes')
+ax[3].set(title='Controller Insulin Infusion',ylabel='I Infusion [mU/ml min]',xlabel='seconds')
 
 fig.align_ylabels()
 
@@ -89,7 +89,7 @@ n_steps = mpc.data['_time'].shape[0]
 anim = FuncAnimation(fig, update, frames=n_steps, blit=True)
 
 gif_writer = ImageMagickWriter(fps=5)
-anim.save('/Users/kcoffey/Documents/ClosedLoop/output/hyperglycemia_unobsmeal_dualhormone.gif')#, writer=gif_writer)
+anim.save('/Users/kcoffey/Documents/ClosedLoop/output/test_Vmax70.gif')#, writer=gif_writer)
 
 
 
