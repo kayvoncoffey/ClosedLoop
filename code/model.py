@@ -54,10 +54,10 @@ def template_model(time_scale,nG,nI,nGd,nId):
 	# GAMMA = 0.5
 	BETA = 0
 	Km = 2300
-	m = 0 /time_scale # scaled by 1/5 to convert to 5 minute time increments
+	m = 60 /time_scale # scaled by 1/5 to convert to 5 minute time increments
 	mb = 60 /time_scale # scaled by 5 to convert to 5 minute time increments
 	s = 0.0072 *time_scale # scaled by 5 to convert to 5 minute time increments
-	Vmax = 70 *time_scale #150 *time_scale # scaled by 5 to convert to 5 minute time increments
+	Vmax = 150 *time_scale #150 *time_scale # scaled by 5 to convert to 5 minute time increments
 
 	# States struct (optimization variables): glucose and insulin at current time step and delays
 	G_t = model.set_variable(var_type='_x', var_name='G_t', shape=(1,1))
@@ -81,7 +81,8 @@ def template_model(time_scale,nG,nI,nGd,nId):
 
 
 	# Set RHS
-	# G_record = model.set_expression(expr_name='T_dif', expr=G_u)
+	# G_t_scale = model.set_expression(expr_name='G_tscale', expr=G_t/100)
+	# I_t_scale = model.set_expression(expr_name='I_tscale', expr=I_t/100)
 	model.set_rhs('G_t', G_t+G_u+f1(I_tau[n_I_delays-1],time_scale)-f2(G_t,time_scale)-GAMMA*(1+s*(m-mb))*f3(G_t,time_scale)*f4(I_t,time_scale))
 	model.set_rhs('I_t', I_t+I_load[n_Idose_delays-1]+BETA*f5(G_tau[n_G_delays-1],time_scale)-Vmax*I_t/(Km+I_t)) 
 
