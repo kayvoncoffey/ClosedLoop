@@ -16,7 +16,7 @@ HOURS = 14 #7am to 9pm
 N_iterations = int(floor(HOURS*60/timescale))
 
 g = 100 
-i = 100 
+i = 50 
 
 n_G_delays = int(floor(5/timescale))
 n_I_delays = int(floor(15/timescale))
@@ -66,7 +66,7 @@ mpc_graphics = do_mpc.graphics.Graphics(mpc.data)
 # %%capture
 fig, ax = plt.subplots(4, sharex=True, figsize=(16,12))
 plt.ion()
-plt.suptitle('Correction of Hyperglycemia with Unobserved Meal \n '+str(HOURS)+' hour simulation')
+plt.suptitle('Correction of Hyperglycemia with Unobserved Meal \n '+str(HOURS)+' hour simulation, high insulin sensitivity (0.9)')
 mpc_graphics.add_line(var_type='_x', var_name='G_t', axis=ax[0])
 mpc_graphics.add_line(var_type='_x', var_name='I_t', axis=ax[1])
 mpc_graphics.add_line(var_type='_u', var_name='G_u', axis=ax[2])
@@ -105,7 +105,7 @@ n_steps = mpc.data['_time'].shape[0]
 anim = FuncAnimation(fig, update, frames=n_steps, blit=True)
 
 gif_writer = ImageMagickWriter(fps=5)
-anim.save('/Users/kcoffey/Documents/ClosedLoop/output/3meal_sim_lowsens.gif')#, writer=gif_writer)
+anim.save('/Users/kcoffey/Documents/ClosedLoop/output/sim_3meal_sens90_i50.gif')#, writer=gif_writer)
 
 
 

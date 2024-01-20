@@ -57,7 +57,7 @@ def template_model(time_scale,nG,nI,nGd,nId):
 	m = 60 /time_scale # scaled by 1/5 to convert to 5 minute time increments
 	mb = 60 /time_scale # scaled by 5 to convert to 5 minute time increments
 	s = 0.0072 *time_scale # scaled by 5 to convert to 5 minute time increments
-	Vmax = 150 *time_scale #150 *time_scale # scaled by 5 to convert to 5 minute time increments
+	Vmax = 100 *time_scale #150 *time_scale # scaled by 5 to convert to 5 minute time increments
 
 	# States struct (optimization variables): glucose and insulin at current time step and delays
 	G_t = model.set_variable(var_type='_x', var_name='G_t', shape=(1,1))
