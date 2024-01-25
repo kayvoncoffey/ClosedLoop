@@ -32,7 +32,7 @@ def template_mpc(model,time_scale,g,i):
 	mterm = (_x['G_t'] - 100 *g)**2 # terminal cost *100
 	lterm = (_x['G_t'] <= 60 *i)*10000 + (_u['G_u']) + (_u['I_u']) #*100
 	# lterm = (1/(_x['G_t'] - 10 *100)) # stage cost
-	mpc.set_rterm(G_u=1.0, I_u=1.0)
+	mpc.set_rterm(G_u=2.0, I_u=2.0)
 
 	mpc.set_objective(mterm=mterm, lterm=lterm)
 	# mpc.set_rterm(G_u=0.1, Q_dot = 1e-3) # Scaling for quad. cost.
@@ -53,7 +53,7 @@ def template_mpc(model,time_scale,g,i):
 	mpc.bounds['lower', '_u', 'I_u'] = 0
 
 	# # upper bounds of the inputs
-	mpc.bounds['upper', '_u', 'G_u'] = 0#10 *g
+	mpc.bounds['upper', '_u', 'G_u'] = 0 *g
 	mpc.bounds['upper', '_u', 'I_u'] = 5 *i
 
 	# mpc.scaling['_x', 'G_t'] = 1
@@ -63,7 +63,7 @@ def template_mpc(model,time_scale,g,i):
 	# mpc.scaling['_x', 'I_tau'] = 100
 	# mpc.scaling['_u', 'I_u'] = 100
 
-	mpc.set_uncertainty_values(gamma = np.array([0.1,0.5,0.9]))
+	mpc.set_uncertainty_values(gamma = np.array([0.3,0.5,0.7]))
 
 	mpc.setup()
 

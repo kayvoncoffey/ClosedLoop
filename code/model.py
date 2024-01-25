@@ -57,7 +57,7 @@ def template_model(time_scale,nG,nI,nGd,nId):
 	m = 60 /time_scale # scaled by 1/5 to convert to 5 minute time increments
 	mb = 60 /time_scale # scaled by 5 to convert to 5 minute time increments
 	s = 0.0072 *time_scale # scaled by 5 to convert to 5 minute time increments
-	Vmax = 100 *time_scale #150 *time_scale # scaled by 5 to convert to 5 minute time increments
+	Vmax = 50 *time_scale #150 *time_scale # scaled by 5 to convert to 5 minute time increments
 
 	# States struct (optimization variables): glucose and insulin at current time step and delays
 	G_t = model.set_variable(var_type='_x', var_name='G_t', shape=(1,1))
@@ -78,6 +78,10 @@ def template_model(time_scale,nG,nI,nGd,nId):
 	G_u = model.set_variable(var_type='_u', var_name='G_u', shape=(1,1))
 	I_u = model.set_variable(var_type='_u', var_name='I_u', shape=(1,1))
 
+	# Set Measurement variables and process + measurement noise
+	G_meas = model.set_meas('G_t_meas', G_t, meas_noise=True)
+	I_u_meas = model.set_meas('I_u_meas', I_u, meas_noise=False)
+	G_u_meas = model.set_meas('G_u_meas',G_u, meas_noise=False)
 
 
 	# Set RHS

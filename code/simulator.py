@@ -13,9 +13,10 @@ def template_simulator(model,time_scale):
 
 	# Uncertain parameters
 	p_num = simulator.get_p_template()
-	p_num['gamma'] = 0.9 #np.random.uniform(0.2,0.7)
 	def p_fun(t_now):
-	    return p_num
+		p_num['gamma'] = 0.1 #np.random.uniform(0.2,0.7)
+		return p_num
+
 	simulator.set_p_fun(p_fun)
 
 	# Setup simulator:
