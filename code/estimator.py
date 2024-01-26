@@ -10,7 +10,7 @@ def template_estimator(model,time_scale,g,i,nG,nI,nGd,nId):
 
 	# Set parameters:
 	setup_mhe = {
-	    'n_horizon': int(floor(90/time_scale)),#int(floor(20/time_scale)),
+	    'n_horizon': int(floor(70/time_scale)),#int(floor(20/time_scale)),
 	    't_step': time_step,
 	    'store_full_solution': True,
 	    'meas_from_data': True,
@@ -21,8 +21,8 @@ def template_estimator(model,time_scale,g,i,nG,nI,nGd,nId):
 	# Set objective weighting matrices
 	n_states = len(model.x.labels())
 
-	P_v = np.diag(np.array([2]))
-	P_x = 5*np.eye(n_states)
+	P_v = 1*np.diag(np.ones(1))
+	P_x = 10*np.eye(n_states)
 	P_p = 1*np.eye(1)
 
 	mhe.set_default_objective(P_x, P_v, P_p)
@@ -52,11 +52,8 @@ def template_estimator(model,time_scale,g,i,nG,nI,nGd,nId):
 	mhe.bounds['upper', '_u', 'G_u'] = 0 *g
 	mhe.bounds['upper', '_u', 'I_u'] = 5 *i
 
-	mhe.bounds['lower','_p_est', 'gamma'] = 0.01
-	mhe.bounds['upper','_p_est', 'gamma'] = 1
-
-	# # [Optional] Set measurement function.
-	# # Measurements are read from data object by default.
+	mhe.bounds['lower','_p_est', 'gamma'] = 0.1
+	mhe.bounds['upper','_p_est', 'gamma'] = 0.9
 
 	mhe.setup()
 

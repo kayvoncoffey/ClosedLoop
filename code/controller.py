@@ -54,7 +54,7 @@ def template_mpc(model,time_scale,g,i):
 
 	# # upper bounds of the inputs
 	mpc.bounds['upper', '_u', 'G_u'] = 0 *g
-	mpc.bounds['upper', '_u', 'I_u'] = 5 *i
+	mpc.bounds['upper', '_u', 'I_u'] = 500 *i
 
 	# mpc.scaling['_x', 'G_t'] = 1
 	# mpc.scaling['_x', 'G_tau'] = 1
