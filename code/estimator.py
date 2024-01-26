@@ -10,7 +10,7 @@ def template_estimator(model,time_scale,g,i,nG,nI,nGd,nId):
 
 	# Set parameters:
 	setup_mhe = {
-	    'n_horizon': int(floor(70/time_scale)),#int(floor(20/time_scale)),
+	    'n_horizon': int(floor(60/time_scale)),#int(floor(20/time_scale)),
 	    't_step': time_step,
 	    'store_full_solution': True,
 	    'meas_from_data': True,
@@ -21,9 +21,9 @@ def template_estimator(model,time_scale,g,i,nG,nI,nGd,nId):
 	# Set objective weighting matrices
 	n_states = len(model.x.labels())
 
-	P_v = 1*np.diag(np.ones(1))
-	P_x = 10*np.eye(n_states)
-	P_p = 1*np.eye(1)
+	P_v = 5e-1*np.diag(np.ones(1)) # punishes total measurement noise 
+	P_x = 5e-1*np.eye(n_states) # punishes changes in initial condition (x at n_horizon ago)
+	P_p = 1e0*np.eye(1) # punishes changes in estimated value of parameter
 
 	mhe.set_default_objective(P_x, P_v, P_p)
 

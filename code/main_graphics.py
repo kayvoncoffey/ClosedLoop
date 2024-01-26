@@ -74,16 +74,12 @@ sim_graphics = do_mpc.graphics.Graphics(simulator.data)
 # %%capture
 fig, ax = plt.subplots(5, sharex=True, figsize=(20,12))
 plt.ion()
-plt.suptitle('Testing MHE Implementation with Measurement Noise \n '+str(HOURS)+' hours; 70 minute estimator horizon')
+plt.suptitle('Testing MHE Implementation with Measurement Noise 100\n '+str(HOURS)+' hours; 70 minute estimator horizon')
 mpc_graphics.add_line(var_type='_x', var_name='G_t', axis=ax[0])
 sim_graphics.add_line(var_type='_x', var_name='G_t', axis=ax[0])
-# mhe_graphics.add_line(var_type='_x', var_name='G_t', axis=ax[0])
-# mhe_graphics.add_line(var_type='_x', var_name='G_t_meas', axis=ax[0])
 
 mpc_graphics.add_line(var_type='_x', var_name='I_t', axis=ax[1])
 sim_graphics.add_line(var_type='_x', var_name='I_t', axis=ax[1])
-# mhe_graphics.add_line(var_type='_x', var_name='I_t', axis=ax[1])
-# mhe_graphics.add_line(var_type='_x', var_name='I_t_meas', axis=ax[1])
 
 mpc_graphics.add_line(var_type='_u', var_name='G_u', axis=ax[2])
 mpc_graphics.add_line(var_type='_u', var_name='I_u', axis=ax[3])
@@ -99,6 +95,10 @@ ax[3].axhline(0, color='white',linestyle='--',linewidth=0.1)
 ax[4].axhline(0, color='white',linestyle='--',linewidth=0.1)
 ax[4].axhline(1, color='white',linestyle='--',linewidth=0.1)
 ax[4].axhline(0.6,color='black',linestyle='--',linewidth=0.75)
+
+[ax[i].axvline(bfast_start*timescale*60,color='red',linestyle='--',linewidth=0.75) for i in [0,2,3]]
+[ax[i].axvline(lunch_start*timescale*60,color='red',linestyle='--',linewidth=0.75) for i in [0,2,3]]
+[ax[i].axvline(dinner_start*timescale*60,color='red',linestyle='--',linewidth=0.75) for i in [0,2,3]]
 
 ax[0].set(title='Blood Glucose',ylabel='BG [mg/dl]')
 ax[1].set(title='Insulin on Board',ylabel='IOB [mU/ml]')
@@ -137,7 +137,7 @@ n_steps = mpc.data['_time'].shape[0]
 anim = FuncAnimation(fig, update, frames=n_steps, blit=True)
 
 gif_writer = ImageMagickWriter(fps=5)
-anim.save('/Users/kcoffey/Documents/ClosedLoop/output/simulations/single_hormone/sim_8hr_meal3_100noise_70horz_tightx.gif')#, writer=gif_writer)
+anim.save('/Users/kcoffey/Documents/ClosedLoop/output/simulations/single_hormone/test_estimator_cost_function.gif')#, writer=gif_writer)
 
 
 
