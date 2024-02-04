@@ -12,7 +12,7 @@ import os
 
 # Set Project Parameters and Initialize
 timescale = 5
-HOURS = 10 #7am to 9pm
+HOURS = 12 #7am to 9pm
 N_iterations = int(floor(HOURS*60/timescale))
 
 g = 100 # 1 L is 10 dL and there are 10 L in the body. 150 mg/dL = 150,000 mg
@@ -61,7 +61,7 @@ for k in range(N_iterations):
 	if (k>=bfast_start) & (k<=bfast_end): u0[0] += (1/(bfast_end-bfast_start))*50 *g # 300 mg/dl of glucose infused of 15 mins
 	if (k>=lunch_start) & (k<=lunch_end): u0[0] += (1/(lunch_end-lunch_start))*100 *g # 
 	if (k>=dinner_start) & (k<=dinner_end): u0[0] += (1/(dinner_end-dinner_start))*150 *g
-	v0 = 100*g*np.random.randn(model.n_v,1) # measurement noise
+	v0 = 0*g*np.random.randn(model.n_v,1) # measurement noise
 	y_next = simulator.make_step(u0, v0=v0)
 	x0 = estimator.make_step(y_next)
 	sys.stdout = sys.__stdout__
@@ -74,7 +74,7 @@ sim_graphics = do_mpc.graphics.Graphics(simulator.data)
 # %%capture
 fig, ax = plt.subplots(5, sharex=True, figsize=(20,12))
 plt.ion()
-plt.suptitle('Testing MHE Implementation with Measurement Noise 100\n '+str(HOURS)+' hours; 70 minute estimator horizon')
+plt.suptitle('Testing MHE Implementation with Measurement Noise 50\n '+str(HOURS)+' hours; 70 minute estimator horizon')
 mpc_graphics.add_line(var_type='_x', var_name='G_t', axis=ax[0])
 sim_graphics.add_line(var_type='_x', var_name='G_t', axis=ax[0])
 
@@ -84,6 +84,7 @@ sim_graphics.add_line(var_type='_x', var_name='I_t', axis=ax[1])
 mpc_graphics.add_line(var_type='_u', var_name='G_u', axis=ax[2])
 mpc_graphics.add_line(var_type='_u', var_name='I_u', axis=ax[3])
 mhe_graphics.add_line(var_type='_p', var_name='gamma', axis=ax[4])
+sim_graphics.add_line(var_type='_p', var_name='gamma', axis=ax[4])
 
 # for line_i in mhe_graphics.result_lines.full: line_i.set_linestyle('--')
 # for line_i in sim_graphics.result_lines.full: line_i.set_linestyle('--')
@@ -94,7 +95,7 @@ ax[0].axhline(120 *g,color='black',linestyle='--',linewidth=0.75)
 ax[3].axhline(0, color='white',linestyle='--',linewidth=0.1)
 ax[4].axhline(0, color='white',linestyle='--',linewidth=0.1)
 ax[4].axhline(1, color='white',linestyle='--',linewidth=0.1)
-ax[4].axhline(0.6,color='black',linestyle='--',linewidth=0.75)
+# ax[4].axhline(0.6,color='black',linestyle='--',linewidth=0.75)
 
 [ax[i].axvline(bfast_start*timescale*60,color='red',linestyle='--',linewidth=0.75) for i in [0,2,3]]
 [ax[i].axvline(lunch_start*timescale*60,color='red',linestyle='--',linewidth=0.75) for i in [0,2,3]]
@@ -137,7 +138,7 @@ n_steps = mpc.data['_time'].shape[0]
 anim = FuncAnimation(fig, update, frames=n_steps, blit=True)
 
 gif_writer = ImageMagickWriter(fps=5)
-anim.save('/Users/kcoffey/Documents/ClosedLoop/output/simulations/single_hormone/test_estimator_cost_function.gif')#, writer=gif_writer)
+anim.save('/Users/kcoffey/Documents/ClosedLoop/output/simulations/single_hormone/sim_3meal_0noise.gif')#, writer=gif_writer)
 
 
 
