@@ -20,3 +20,4 @@ Insulin is removed from the bloodstream in one main ways
 1. Clearance - insulin in the bloodstream is metabolized by the presence of human insulin degrading enzyme (IDE) 
 
 ![What is this](G-I dynamics.png)
+<img src="https://github.com/kayvoncoffey/ClosedLoop/blob/main/output/GI_dynamics.png" width="50" height="50">
