@@ -19,7 +19,7 @@ Insulin is added to the blood stream in two main ways
 Insulin is removed from the bloodstream in one main ways
 1. Clearance - insulin in the bloodstream is metabolized by the presence of human insulin degrading enzyme (IDE) 
 
-$\textbf{Figure 1}\\$
+$\textbf{Figure 1}$\newline
 <img src="https://github.com/kayvoncoffey/ClosedLoop/blob/main/output/GI_dynamics.png" width="50%" height="50%">
 
 These sources and sinks of glucose and insulin are modeled using the following set of nonlinear delay differential equations.
