@@ -1,5 +1,7 @@
 Closed Loop AP Project
 
+Checkout the `output/` folder for a full write up of the model and simulation results!
+
 The goal of this project is to build a closed-loop AP (artificial pancreas) controller to automatically manage diabetes treatment. The controller should be wholly self-contained (full closed loop, no patient input), robust and patient-specific (parameters tunable to handle inter-patient and intra-patient variability), safe (avoid hypoglycemia), and effective (increase TiR). 
 
 In particular, this project aims to 
